@@ -25,8 +25,6 @@ if($_POST){
   }else{
     echo "<script>alert('Wrong Image format alert')</script>";
   }
-
- 
 }
 ?>
 

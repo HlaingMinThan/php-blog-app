@@ -1,16 +1,15 @@
 <?php
     session_start();
     if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
-      header("location:login.php");
+    header("location:login.php");
     }
     require "../config/config.php";
-    require "layout/header.php";
-    if(isset($_COOKIE['search'])){
-        unset($_COOKIE["search"]);
+    require "layout/header.php"; 
+    if(isset($_GET['search'])){
+        setcookie("search",$_GET['search'],time()+3600);
     }
 ?>
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
@@ -53,22 +52,22 @@
                       }
                       else{
                         $pageno=1;
-                      }
-                      $recordsPerPage=5;
-                      $offset=($pageno-1)*$recordsPerPage;
-                      $stmt=$pdo->prepare("select * from posts order by id desc limit $offset,$recordsPerPage");
-                      $stmt->execute();
-                      $posts=$stmt->fetchAll(PDO::FETCH_OBJ);
-                      // total pages
-                      $statement=$pdo->prepare('select count(*) from posts');
-                      $statement->execute();
-                      $result=$statement->fetch();
-                      $totalposts=$result[0];
-                      $totalPages=ceil($totalposts/$recordsPerPage);
-                             
-                         
+                      }   
+                      if(isset($_GET['search'])||isset($_COOKIE['search'])){
+                        $recordsPerPage=5;
+                        $offset=($pageno-1)*$recordsPerPage;
+                        $search=isset($_GET['search'])?$_GET['search']:$_COOKIE['search'];
+                        $stmt=$pdo->prepare("select * from posts where title like '%$search%' order by id desc limit $offset,$recordsPerPage");
+                        $stmt->execute();
+                        $posts=$stmt->fetchAll(PDO::FETCH_OBJ);
 
-                          
+                        // total pages
+                        $statement=$pdo->prepare("select count(*) from posts where title like '%$search%'");
+                        $statement->execute();
+                        $result=$statement->fetch();
+                        $totalposts=$result[0];
+                        $totalPages=ceil($totalposts/$recordsPerPage);
+                        }        
                     if($posts)
                     {
                         foreach($posts as $post): 
