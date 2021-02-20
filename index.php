@@ -8,6 +8,9 @@ header("location:login.php");
 <?php require "./config/config.php"; ?>
 
             <h1 class="text-center mb-5">Blog Website</h1>
+            <div class="text-center">
+            <a href="logout.php" class="btn btn-primary mb-5">Logout</a>
+            </div>
             <div class="container">
             <div class="row ">
             <?php 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
+if($_SESSION["user_id"] && $_SESSION["logged_in"]&& $_SESSION["role"]!=1){
   header("location:login.php");
 }
 require "../config/config.php";

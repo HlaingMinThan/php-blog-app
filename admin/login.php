@@ -11,7 +11,8 @@ if($_POST){
     if($user["password"]===$password){
       $_SESSION["user_id"]=$user["id"];
       $_SESSION["username"]=$user["name"];
-      $_SESSION["logged_id"]=time();
+      $_SESSION["role"]=$user["role"];
+      $_SESSION["logged_in"]=time();
       header("location:index.php");
     }else{
       echo "<script>alert('Not match credentials')</script>";
