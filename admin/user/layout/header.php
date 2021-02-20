@@ -31,7 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </ul>
 
     <!-- SEARCH FORM -->
-    <form class="form-inline ml-3"  action="searchPage.php"> 
+    <form class="form-inline ml-3"  action="searchUser.php"> 
       <div class="input-group input-group-sm">
         <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="search">
         <div class="input-group-append">

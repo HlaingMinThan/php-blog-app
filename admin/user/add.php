@@ -5,6 +5,14 @@ if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
 }
 require "../../config/config.php";
 if($_POST){
+  $statement=$pdo->prepare("select * from users where email=?");
+  $statement->execute([$_POST['email']]);
+  $user=$statement->fetch(PDO::FETCH_ASSOC);
+  if($user){
+   
+      echo "<script>alert('User email already exist')</script>";
+    
+  }else{
     $sql="insert into users (name,email,password,role) values (?,?,?,?)";
     $statement=$pdo->prepare($sql);
     $post=[
@@ -15,6 +23,8 @@ if($_POST){
     ];
     $statement->execute($post);
     header('location:index.php');
+  }
+    
  
 }
 ?>

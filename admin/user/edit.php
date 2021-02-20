@@ -9,29 +9,39 @@ $statement=$pdo->prepare("select * from users where id=?");
 $statement->execute([$user_id]);
 $editUser=$statement->fetch(PDO::FETCH_OBJ);
 if($_POST){
-  if($_POST['password']){
-    $sql="update users set name=?,email=?,password=?,role=? where id=?";
-    $statement=$pdo->prepare($sql);
-    $user=[
-      $_POST['name'],
-      $_POST['email'],
-      $_POST['password'],
-      $_POST['role'],
-      $user_id
-    ];
-    $statement->execute($user);
-    header('location:index.php');
+  $statement=$pdo->prepare("select * from users where email=? and id!=$editUser->id");
+  $statement->execute([$_POST['email']]);
+  $user=$statement->fetch(PDO::FETCH_ASSOC);
+  if($user){
+   
+      echo "<script>alert('User email already exist')</script>";
+    
   }else{
-    $sql="update users set name=?,email=?,role=? where id=?";
-    $statement=$pdo->prepare($sql);
-    $user=[
-      $_POST['name'],
-      $_POST['email'],
-      $_POST['role'],
-      $user_id
-    ];
-    $statement->execute($user);
-    header('location:index.php');
+    if($_POST['password']){
+      $sql="update users set name=?,email=?,password=?,role=? where id=?";
+      $statement=$pdo->prepare($sql);
+      $user=[
+        $_POST['name'],
+        $_POST['email'],
+        $_POST['password'],
+        $_POST['role'],
+        $user_id
+      ];
+      $statement->execute($user);
+      header('location:index.php');
+    }else{
+      $sql="update users set name=?,email=?,role=? where id=?";
+      $statement=$pdo->prepare($sql);
+      $user=[
+        $_POST['name'],
+        $_POST['email'],
+        $_POST['role'],
+        $user_id
+      ];
+      $statement->execute($user);
+      header('location:index.php');
+    }
+
   }
 
 }
