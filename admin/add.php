@@ -5,26 +5,48 @@ if($_SESSION["user_id"] && $_SESSION["logged_in"]&& $_SESSION["role"]!=1){
 }
 require "../config/config.php";
 if($_POST){
- 
-  $imgName=$_FILES['image']['name'];
-  $to="images/$imgName";
-  $imageType=pathinfo($to,PATHINFO_EXTENSION);//pathinfo fun is getting info of the file from whole path
-  if($imageType==="png" ||  $imageType==="jpg"|| $imageType==="jpeg"){
-    $from=$_FILES['image']['tmp_name'];
-    move_uploaded_file($from,$to);
-    $sql="insert into posts (title,content,image,author_id) values (?,?,?,?)";
-    $statement=$pdo->prepare($sql);
-    $post=[
-      $_POST['title'],
-      $_POST['content'],
-      $imgName,
-      $_SESSION['user_id']
-    ];
-    $statement->execute($post);
-    header('location:index.php');
+  
+  if(empty($_POST['title']) || empty($_POST['content']) ||empty($_FILES['image']['name'])){
+    if(empty($_POST['title'])){
+      $titleError="title is required";
+      // die($titleError);
+    }
+    if(empty($_POST['content'])){
+      $contentError="content is required";
+      // die($contentError);
+    }
+    if(empty($_FILES['image']['name'])){
+      $imgError="img is required";
+      // die($imgError);
+    }else{
+      $imageType=pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION);
+      if($imageType!=="png" ||  $imageType!=="jpg"|| $imageType!=="jpeg"){
+        // die($imageType);
+        $imgError="img should be png ,jpg or jpeg";
+      }
+    }
   }else{
-    echo "<script>alert('Wrong Image format alert')</script>";
+    $imgName=$_FILES['image']['name'];
+    $to="images/$imgName";
+    $imageType=pathinfo($to,PATHINFO_EXTENSION);//pathinfo fun is getting info of the file from whole path
+    if($imageType==="png" ||  $imageType==="jpg"|| $imageType==="jpeg"){
+      $from=$_FILES['image']['tmp_name'];
+      move_uploaded_file($from,$to);
+      $sql="insert into posts (title,content,image,author_id) values (?,?,?,?)";
+      $statement=$pdo->prepare($sql);
+      $post=[
+        $_POST['title'],
+        $_POST['content'],
+        $imgName,
+        $_SESSION['user_id']
+      ];
+      $statement->execute($post);
+      header('location:index.php');
+    }else{
+      $imgError="img should be png ,jpg or jpeg";
+    }
   }
+  
 }
 ?>
 
@@ -53,10 +75,12 @@ if($_POST){
                   <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title">
+                    <p class="text-danger"><?=empty($titleError)?'':$titleError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="content">Content</label>
                    <textarea  class="form-control" id="" cols="30" rows="10" name="content"></textarea>
+                   <p class="text-danger"><?=empty($contentError)?'':$contentError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="image">Image</label>
@@ -66,6 +90,7 @@ if($_POST){
                         <label class="custom-file-label" for="image">Choose file</label>
                       </div>
                     </div>
+                    <p class="text-danger"><?=empty($imgError)?'':$imgError;?></p>
                   </div>
                 </div>
                 <!-- /.card-body -->

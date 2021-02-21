@@ -2,6 +2,8 @@
 session_start();
 require "./config/config.php";
 if($_POST){
+  if(empty($_POST['email']))$emailError="email is required";
+  if(empty($_POST['password']))$passwordError="password is required";
   $email=$_POST["email"];
   $password=$_POST["password"];
   $statement=$pdo->prepare("select * from users where email=?");
@@ -19,7 +21,7 @@ if($_POST){
     }
   }else
   {
-    echo "<script>alert('No User Found')</script>";
+    $emailError="email doesn't exits";
   }
 }
 ?>
@@ -35,6 +37,7 @@ if($_POST){
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form action="login.php" method="post">
+        <p class="text-danger"><?=empty($emailError)?'':$emailError;?></p>
         <div class="input-group mb-3">
           <input type="email" class="form-control" placeholder="Email" name="email">
           <div class="input-group-append">
@@ -43,6 +46,7 @@ if($_POST){
             </div>
           </div>
         </div>
+        <p class="text-danger"><?=empty($passwordError)?'':$passwordError;?></p>
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Password" name="password">
           <div class="input-group-append">

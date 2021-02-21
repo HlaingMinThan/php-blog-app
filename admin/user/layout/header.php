@@ -42,7 +42,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
       </div>
     </form>
     <div class="">
-      <a class="btn btn-primary ml-3" href="logout.php">Logout</a>
+      <a class="btn btn-primary ml-3" href="../logout.php">Logout</a>
     </div>
   </nav>
   <!-- /.navbar -->

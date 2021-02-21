@@ -9,27 +9,51 @@ $statement=$pdo->prepare("select * from posts where id=?");
 $statement->execute([$post_id]);
 $editPost=$statement->fetch(PDO::FETCH_OBJ);
 if($_POST){
-    if($_FILES['image']['name']!=null){
-        $imgName=$_FILES['image']['name'];
-        $to="images/$imgName";
-        $imageType=pathinfo($to,PATHINFO_EXTENSION);//pathinfo fun is getting info of the file from whole path
-        if($imageType==="png" ||  $imageType==="jpg"|| $imageType==="jpeg"){
-            $from=$_FILES['image']['tmp_name'];
-            move_uploaded_file($from,$to);
-            $sql="update posts set title=?,content=?,image=? where id=?";
-            $statement=$pdo->prepare($sql);
-            $post=[
-                $_POST['title'],
-                $_POST['content'],
-                $imgName,
-                $_POST['id']
-            ];
-            $statement->execute($post);
-            header("location:index.php");
-        }else{
-            echo "<script>alert('Wrong Image format alert')</script>";
-        }
+  if(empty($_POST['title']) || empty($_POST['content'])){
+    if(empty($_POST['title'])){
+      $titleError="title is required";
+      // die($titleError);
+    }
+    if(empty($_POST['content'])){
+      $contentError="content is required";
+      // die($contentError);
+    }
+    if(empty($_FILES['image']['name'])){
+      $imgError="img is required";
+      // die($imgError);
     }else{
+      $imageType=pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION);
+      if($imageType!=="png" ||  $imageType!=="jpg"|| $imageType!=="jpeg"){
+        // die($imageType);
+        $imgError="img should be png ,jpg or jpeg";
+      }
+    }
+  }else{
+    
+    if($_FILES['image']['name']!=null){
+      $imgName=$_FILES['image']['name'];
+      $to="images/$imgName";
+      $imageType=pathinfo($to,PATHINFO_EXTENSION);//pathinfo fun is getting info of the file from whole path
+    
+      if($imageType==="png" ||  $imageType==="jpg"|| $imageType==="jpeg"){
+         
+          $from=$_FILES['image']['tmp_name'];
+          move_uploaded_file($from,$to);
+          $sql="update posts set title=?,content=?,image=? where id=?";
+          $statement=$pdo->prepare($sql);
+          $post=[
+              $_POST['title'],
+              $_POST['content'],
+              $imgName,
+              $_POST['id']
+          ];
+          $statement->execute($post);
+          header("location:index.php");
+      }else{
+        $imgError="img should be png ,jpg or jpeg";
+      }
+    }else{
+      
         $sql="update posts set title=?,content=? where id=?";
         $statement=$pdo->prepare($sql);
         $post=[
@@ -40,10 +64,12 @@ if($_POST){
         $statement->execute($post);
         header("location:index.php");
     }
+  }
+    
     
   
    
-  }
+}
 ?>
 
 <?php require "layout/header.php"; ?>
@@ -72,10 +98,12 @@ if($_POST){
                   <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" id="title" name="title" value="<?=$editPost->title;?>">
+                    <p class="text-danger"><?=empty($titleError)?'':$titleError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="content">Content</label>
                     <textarea id="" cols="30" rows="10" class="form-control" name="content"><?=$editPost->content;?></textarea>
+                    <p class="text-danger"><?=empty($contentError)?'':$contentError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="image">Image</label><br>
@@ -86,6 +114,7 @@ if($_POST){
                             <label class="custom-file-label" for="image">Choose file</label>
                         </div>
                     </div>
+                    <p class="text-danger"><?=empty($imgError)?'':$imgError;?></p>
                   </div>
                 </div>
                 <!-- /.card-body -->

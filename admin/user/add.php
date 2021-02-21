@@ -10,19 +10,37 @@ if($_POST){
   $user=$statement->fetch(PDO::FETCH_ASSOC);
   if($user){
    
-      echo "<script>alert('User email already exist')</script>";
+      $emailError="user email already exists";
     
   }else{
-    $sql="insert into users (name,email,password,role) values (?,?,?,?)";
-    $statement=$pdo->prepare($sql);
-    $post=[
-      $_POST['name'],
-      $_POST['email'],
-      $_POST['password'],
-      $_POST['role']
-    ];
-    $statement->execute($post);
-    header('location:index.php');
+    if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['password'])){
+      if(empty($_POST['name'])){
+        $nameError="name is required";
+      }
+      if(empty($_POST['email'])){
+        $emailError="email is required";
+      }
+      if(empty($_POST['password'])){
+        $passwordError="password is required";
+      }
+      
+    }else{
+      if(strlen($_POST['password'])<6){
+        $passwordError="password must me at least 6 character";
+      }else{
+
+        $sql="insert into users (name,email,password,role) values (?,?,?,?)";
+        $statement=$pdo->prepare($sql);
+        $post=[
+          $_POST['name'],
+          $_POST['email'],
+          $_POST['password'],
+          $_POST['role']
+        ];
+        $statement->execute($post);
+        header('location:index.php');
+      }
+    }
   }
     
  
@@ -54,14 +72,17 @@ if($_POST){
                   <div class="form-group">
                     <label for="name">name</label>
                     <input type="text" class="form-control" id="name" name="name">
+                    <p class="text-danger"><?=empty($nameError)?'':$nameError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="email">email</label>
                     <input type="text" class="form-control" id="email" name="email">
+                    <p class="text-danger"><?=empty($emailError)?'':$emailError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="password">password</label>
                     <input type="text" class="form-control" id="password" name="password">
+                    <p class="text-danger"><?=empty($passwordError)?'':$passwordError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="password">role</label>

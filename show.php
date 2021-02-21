@@ -17,15 +17,18 @@
 
     if($_POST){
         $comment=$_POST['content'];
-        $sql="insert into comments (post_id,content,author_id) values (?,?,?)";
-        $statement=$pdo->prepare($sql);
-        $comment=[
-        $post_id,
-        $comment,
-        $_SESSION['user_id']
-        ];
-        $statement->execute($comment);
-        header("location:show.php?id=$post_id");
+        if(empty($comment))$commentError="comment is required";
+        else{
+            $sql="insert into comments (post_id,content,author_id) values (?,?,?)";
+            $statement=$pdo->prepare($sql);
+            $comment=[
+            $post_id,
+            $comment,
+            $_SESSION['user_id']
+            ];
+            $statement->execute($comment);
+            header("location:show.php?id=$post_id");
+        }
     }
 
 ?>
@@ -58,6 +61,7 @@
                 <?php endforeach; ?>
                 <form action="" class="mb-5" method="post">
                     <div>
+                    <p class="text-danger"><?=empty($commentError)?'':$commentError;?></p>
                     <input type="text" class="form-control" name="content" placeholder="comment here">
                     <a href="index.php" class="mt-4 btn btn-default">back</a>
                     </div>

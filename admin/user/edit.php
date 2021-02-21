@@ -14,32 +14,47 @@ if($_POST){
   $user=$statement->fetch(PDO::FETCH_ASSOC);
   if($user){
    
-      echo "<script>alert('User email already exist')</script>";
+      $emailError="User email already exist";
     
   }else{
-    if($_POST['password']){
-      $sql="update users set name=?,email=?,password=?,role=? where id=?";
-      $statement=$pdo->prepare($sql);
-      $user=[
-        $_POST['name'],
-        $_POST['email'],
-        $_POST['password'],
-        $_POST['role'],
-        $user_id
-      ];
-      $statement->execute($user);
-      header('location:index.php');
+    if(empty($_POST['name']) || empty($_POST['email'])){
+      if(empty($_POST['name'])){
+        $nameError="name is required";
+      }
+      if(empty($_POST['email'])){
+        $emailError="email is required";
+      }
     }else{
-      $sql="update users set name=?,email=?,role=? where id=?";
-      $statement=$pdo->prepare($sql);
-      $user=[
-        $_POST['name'],
-        $_POST['email'],
-        $_POST['role'],
-        $user_id
-      ];
-      $statement->execute($user);
-      header('location:index.php');
+
+      if($_POST['password']){
+        if(strlen($_POST['password'])<6){
+          $passwordError="password must me at least 6 character";
+        }else{
+
+          $sql="update users set name=?,email=?,password=?,role=? where id=?";
+          $statement=$pdo->prepare($sql);
+          $user=[
+            $_POST['name'],
+            $_POST['email'],
+            $_POST['password'],
+            $_POST['role'],
+            $user_id
+          ];
+          $statement->execute($user);
+          header('location:index.php');
+        }
+      }else{
+        $sql="update users set name=?,email=?,role=? where id=?";
+        $statement=$pdo->prepare($sql);
+        $user=[
+          $_POST['name'],
+          $_POST['email'],
+          $_POST['role'],
+          $user_id
+        ];
+        $statement->execute($user);
+        header('location:index.php');
+      }
     }
 
   }
@@ -72,14 +87,17 @@ if($_POST){
                   <div class="form-group">
                     <label for="name">name</label>
                     <input type="text" class="form-control" id="name" name="name" value="<?=$editUser->name;?>">
+                    <p class="text-danger"><?=empty($nameError)?'':$nameError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="email">email</label>
                     <input type="text" class="form-control" id="email" name="email" value="<?=$editUser->email;?>">
+                    <p class="text-danger"><?=empty($emailError)?'':$emailError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="password">new password</label>
                     <input type="text" class="form-control" id="password" name="password">
+                    <p class="text-danger"><?=empty($passwordError)?'':$passwordError;?></p>
                   </div>
                   <div class="form-group">
                     <label for="password">role</label>
