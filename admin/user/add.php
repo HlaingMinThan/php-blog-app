@@ -34,7 +34,7 @@ if($_POST){
         $post=[
           $_POST['name'],
           $_POST['email'],
-          $_POST['password'],
+         password_hash($_POST['password'],PASSWORD_DEFAULT),
           $_POST['role']
         ];
         $statement->execute($post);
