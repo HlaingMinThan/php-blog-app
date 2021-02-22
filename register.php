@@ -1,5 +1,5 @@
 <?php
-session_start();
+require "./config/common.php";
 require "./config/config.php";
 if($_POST){
   $name=$_POST["name"];
@@ -56,6 +56,7 @@ if($_POST){
     <div class="card-body login-card-body">
 
       <form action="register.php" method="post">
+        <input type="hidden" name="_token" value="<?=empty($_SESSION['_token'])?'':$_SESSION['_token'];?>">
         <p class="text-danger"><?=empty($nameError)?'':$nameError;?></p>
         <div class="input-group mb-3">
           <input type="text" class="form-control" placeholder="Username" name="name">

@@ -1,9 +1,11 @@
 <?php
-session_start();
+
+require "../config/common.php";
+require "../config/config.php";
 if($_SESSION["user_id"] && $_SESSION["logged_in"]&& $_SESSION["role"]!=1){
   header("location:login.php");
 }
-require "../config/config.php";
+
 if($_POST){
   
   if(empty($_POST['title']) || empty($_POST['content']) ||empty($_FILES['image']['name'])){
@@ -71,6 +73,7 @@ if($_POST){
           <div class="col-md-12">
             <div class="card">
             <form  action="add.php" enctype="multipart/form-data" method="POST">
+                <input type="hidden" name="_token" value="<?=empty($_SESSION['_token'])?'':$_SESSION['_token'];?>">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="title">Title</label>

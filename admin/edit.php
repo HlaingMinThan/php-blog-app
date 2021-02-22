@@ -1,9 +1,10 @@
 <?php
-session_start();
+require "../config/common.php";
+require "../config/config.php";
 if($_SESSION["user_id"] && $_SESSION["logged_in"]&& $_SESSION["role"]!=1){
   header("location:login.php");
 }
-require "../config/config.php";
+
 $post_id=$_GET['id'];
 $statement=$pdo->prepare("select * from posts where id=?");
 $statement->execute([$post_id]);
@@ -18,10 +19,8 @@ if($_POST){
       $contentError="content is required";
       // die($contentError);
     }
-    if(empty($_FILES['image']['name'])){
+    if(!empty($_FILES['image']['name'])){
       $imgError="img is required";
-      // die($imgError);
-    }else{
       $imageType=pathinfo($_FILES['image']['name'],PATHINFO_EXTENSION);
       if($imageType!=="png" ||  $imageType!=="jpg"|| $imageType!=="jpeg"){
         // die($imageType);
@@ -80,7 +79,7 @@ if($_POST){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Create Blog</h1>
+            <h1 class="m-0 text-dark">Edit Blog</h1>
           </div><!-- /.col -->
         </div><!-- /.row -->
       </div><!-- /.container-fluid -->
@@ -93,6 +92,7 @@ if($_POST){
           <div class="col-md-12">
             <div class="card">
             <form  action="" enctype="multipart/form-data" method="POST">
+                <input type="hidden" name="_token" value="<?=empty($_SESSION['_token'])?'':$_SESSION['_token'];?>">
                 <div class="card-body">
                     <input type="hidden" name="id" value="<?=$editPost->id;?>">
                   <div class="form-group">

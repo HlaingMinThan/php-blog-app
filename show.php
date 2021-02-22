@@ -1,10 +1,11 @@
 <?php 
-    session_start();
+    require "./config/common.php";
+    require "./config/config.php"; 
     if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
         header("location:login.php");
     }
     require "./layout/header.php"; 
-    require "./config/config.php"; 
+
     $post_id=$_GET['id'];
     $statement=$pdo->prepare("select * from posts where id=?");
     $statement->execute([$post_id]);
@@ -60,6 +61,7 @@
                 </li>
                 <?php endforeach; ?>
                 <form action="" class="mb-5" method="post">
+                    <input type="hidden" name="_token" value="<?=empty($_SESSION['_token'])?'':$_SESSION['_token'];?>">
                     <div>
                     <p class="text-danger"><?=empty($commentError)?'':$commentError;?></p>
                     <input type="text" class="form-control" name="content" placeholder="comment here">

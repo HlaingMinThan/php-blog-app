@@ -1,5 +1,5 @@
 <?php
-session_start();
+require "../config/common.php";
 require "../config/config.php";
 if($_POST){
   if(empty($_POST['email']))$emailError="email is required";
@@ -56,6 +56,7 @@ if($_POST){
       <p class="login-box-msg">Sign in to start your session</p>
 
       <form action="login.php" method="post">
+        <input type="hidden" name="_token" value="<?=empty($_SESSION['_token'])?'':$_SESSION['_token'];?>">
         <p class="text-danger"><?=empty($emailError)?'':$emailError;?></p>  
         <div class="input-group mb-3">
           <input type="email" class="form-control" placeholder="Email" name="email">

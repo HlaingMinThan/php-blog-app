@@ -1,9 +1,10 @@
 <?php
-session_start();
+require "../../config/common.php";
+require "../../config/config.php";
 if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
   header("location:login.php");
 }
-require "../../config/config.php";
+
 $user_id=$_GET['id'];
 $statement=$pdo->prepare("select * from users where id=?");
 $statement->execute([$user_id]);
@@ -83,6 +84,7 @@ if($_POST){
           <div class="col-md-12">
             <div class="card">
             <form  action=""  method="POST">
+              <input type="hidden" name="_token" value="<?=empty($_SESSION['_token'])?'':$_SESSION['_token'];?>">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="name">name</label>
