@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    require "../config/common.php";
     // die($_SESSION["logged_id"]);
     if($_SESSION["user_id"] && $_SESSION["logged_in"] && $_SESSION["role"]!=1){
       header("location:login.php");
@@ -75,9 +75,9 @@
                         foreach($posts as $post): 
                     ?>
                       <tr>
-                        <td><?=$post->id;?></td>
-                        <td><?=$post->title;?></td>
-                        <td><?=substr($post->content,0,100)."...";?></td>
+                        <td><?=escape($post->id);?></td>
+                        <td><?=escape($post->title);?></td>
+                        <td><?=escape(substr($post->content,0,100))."...";?></td>
                         <td>
                           <a href="edit.php?id=<?=$post->id; ?>" class="btn btn-warning">Edit</a>
                         </td>

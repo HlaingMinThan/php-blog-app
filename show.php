@@ -37,10 +37,10 @@
         <div class="row">
             <div class="col-md-12">
             <div class="card">
-                <h3 class="text-center text-primary mt-3"><?=$post->title;?></h3>
+                <h3 class="text-center text-primary mt-3"><?=escape($post->title);?></h3>
                 <img class=" img-fluid mx-auto my-5" src="./admin/images/<?=$post->image;?>" alt="Card image cap" width="500px">
                 <div class="card-body">
-                    <p class="card-text"><?=$post->content;?></p>
+                    <p class="card-text"><?=escape($post->content);?></p>
                 </div>
                 </div>
             </div>
@@ -56,8 +56,8 @@
                     $username=$result['name'];
                 ?>
                 <li class="list-group-item">
-                    <h4 class="d-inline"><?=$username;?></h4><span class="text-md text-secondary ml-3"><?=$comment->created_at;?></span>
-                    <p class="mt-3"><?=$comment->content;?></p>
+                    <h4 class="d-inline"><?=escape($username);?></h4><span class="text-md text-secondary ml-3"><?=escape($comment->created_at);?></span>
+                    <p class="mt-3"><?=escape($comment->content);?></p>
                 </li>
                 <?php endforeach; ?>
                 <form action="" class="mb-5" method="post">

@@ -1,6 +1,8 @@
 <?php 
+
 require "./layout/header.php";
-session_start();
+require "./config/common.php";
+
 if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
 header("location:login.php");
 }
@@ -45,9 +47,9 @@ header("location:login.php");
                 <div class="col-sm-6">
                     <div class="card">
                     <div class="card-body">
-                        <h2 class="text-center"><?=$post->title;?></h2>
-                        <img src="./admin/images/<?=$post->image;?>" width="300px">
-                        <p class="card-text"><?=substr($post->content,0,100)?></p>
+                        <h2 class="text-center"><?=escape($post->title);?></h2>
+                        <img src="./admin/images/<?=escape($post->image);?>" width="300px">
+                        <p class="card-text"><?=escape(substr($post->content,0,100))?></p>
                         <a href="show.php?id=<?=$post->id;?>" class="btn btn-primary">Read More...</a>
                     </div>
                     </div>

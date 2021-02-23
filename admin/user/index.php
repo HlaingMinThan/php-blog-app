@@ -1,9 +1,10 @@
 <?php
-    session_start();
+    require "../../config/common.php";
+    require "../../config/config.php";
     if(!$_SESSION["user_id"] && !$_SESSION["logged_in"]){
       header("location:login.php");
     }
-    require "../../config/config.php";
+
     require "layout/header.php";
     if(isset($_COOKIE['search'])){
         unset($_COOKIE["search"]);
@@ -74,10 +75,10 @@
                         foreach($users as $user): 
                     ?>
                       <tr>
-                        <td><?=$user->id;?></td>
-                        <td><?=$user->name;?></td>
-                        <td><?=substr($user->email,0,100)."...";?></td>
-                        <td><?=$user->role;?></td>
+                        <td><?=escape($user->id);?></td>
+                        <td><?=escape($user->name);?></td>
+                        <td><?=escape(substr($user->email,0,100))."...";?></td>
+                        <td><?=escape($user->role);?></td>
                         <td>
                           <a href="edit.php?id=<?=$user->id; ?>" class="btn btn-warning">Edit</a>
                         </td>
